@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+</head>
+<body>
+<div class="title">Case Converter</div>
+<div>
+		<textarea id="text" name="text" style=" width: 80%; height: 200px"></textarea>
+</div>
+
+<div>
+		<button id="upper-case">Upper Case</button>
+		<button id="lower-case">Lower Case</button>
+		<button id="proper-case">Proper Case</button>
+		<button id="sentence-case">Sentence Case</button>
+		<button id="save-text-file">Save Text File</button>
+</div>
+
+<script>
+	
+<!--TextArea-->
+let text = document.querySelector("textarea");
+
+<!--		upper case button-->
+
+document.getElementById("upper-case")
+	 .addEventListener("click",function(){
+		 text.value = text.value.toUpperCase();
+	 });
+<!--		lower case button-->
+document.getElementById("lower-case")
+	 .addEventListener("click",function(){
+		 text.value = text.value.toLowerCase();
+	 });
+<!--		proper case button-->
+let properCaseButton = document.getElementById('proper-case');
+properCaseButton.addEventListener('click', function () {
+
+	let word = text.value.toLowerCase().split(' ');
+	for (let i = 0; i < word.length; i++) {
+		word[i] = word[i].charAt(0).toUpperCase() + word[i].slice(1);
+	}
+
+	document.getElementById('text').value = word.join(' ');
+});
+
+<!--		sentence case button-->
+let sentenceCaseButton = document.getElementById('sentence-case');
+sentenceCaseButton.addEventListener('click', function () {
+
+	let word = text.value.toLowerCase().split('. ');
+
+	for (let i = 0; i < word.length; i++) {
+		word[i] = word[i].charAt(0).toUpperCase() + word[i].slice(1);
+	}
+
+	document.getElementById('text').value = word.join('. ');
+});
+
+// save text file
+
+let saveTextFile = document.getElementById('save-text-file');
+saveTextFile.addEventListener('click', function () {
+	let textToWrite = document.getElementById('text').value;
+	let textFileAsBlob = new Blob([textToWrite], {type: 'text/plain'});
+	let fileNameToSaveAs = "text.txt";
+
+	let downloadLink = document.createElement("a");
+	downloadLink.download = fileNameToSaveAs;
+	downloadLink.innerHTML = "Download File";
+	if (window.webkitURL != null) {
+		// Chrome allows the link to be clicked
+		// without actually adding it to the DOM.
+		downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+	} else {
+		// Firefox requires the link to be added to the DOM
+		// before it can be clicked.
+		downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+		downloadLink.onclick = destroyClickedElement;
+		downloadLink.style.display = "none";
+		document.body.appendChild(downloadLink);
+	}
+
+	downloadLink.click();
+});
+
+</script>
+</body>
+</html>
